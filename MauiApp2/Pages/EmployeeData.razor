@@ -1,0 +1,68 @@
+﻿@page "/employeedata"
+@using MauiApp2.Data;
+@using MauiApp2.Data.Model;
+
+
+@inject EmployeeService EmployeeService
+
+<h3>EmployeeData</h3>
+<br />
+
+@if (employeeModels == null)
+{
+    <p><em>Loading ...</em></p>
+}
+else
+{
+    <form class="form-group" @onsubmit="SearchEmployee">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Search User" @bind="_searchQuote">
+            <div class="input-group-append">
+                <button class="btn btn-primary mx-2" type="button">Button</button>
+            </div>
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Designation</th>
+                <th scope="col">Salary</th>
+                <th scope="col">Join Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in employeeModels)
+            {
+                <tr>
+                    <td>@employee.FirstName</td>
+                    <td>@employee.LastName</td>
+                    <td>@employee.Designation</td>
+                    <td>@employee.Salary</td>
+                    <td>@employee.StartDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+    private List<EmployeeModel> employeeModels;
+    private string _searchQuote;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        employeeModels = EmployeeService.EmployeeDetails();
+    }
+
+    private void SearchEmployee()
+    {
+        employeeModels = EmployeeService.GetEmployeeData(_searchQuote);
+    }
+
+}
